@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
  import './change_ipfs_gateway_dialog.js';
- 
+
 (function() {
 'use strict';
 
@@ -33,6 +33,7 @@ Polymer({
   /** @override */
   ready: function() {
     this.onIPFSCompanionEnabledChange_ = this.onIPFSCompanionEnabledChange_.bind(this)
+    this.onChangeIpfsStorageMax_ = this.onChangeIpfsStorageMax_.bind(this)
 
     this.browserProxy_.getIPFSResolveMethodList().then(list => {
       this.ipfsResolveMethod_ = JSON.parse(list)
@@ -40,6 +41,10 @@ Polymer({
     this.browserProxy_.getIPFSEnabled().then(enabled => {
       this.ipfsEnabled_ = enabled
     });
+  },
+
+  onChangeIpfsStorageMax_: function() {
+    this.browserProxy_.setIPFSStorageMax(Number(this.$.ipfsStorageMax.value));
   },
 
   onIPFSCompanionEnabledChange_: function() {

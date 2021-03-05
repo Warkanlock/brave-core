@@ -116,6 +116,7 @@ void IpfsService::RegisterPrefs(PrefRegistrySimple* registry) {
   registry->RegisterBooleanPref(kIPFSAutoFallbackToGateway, false);
   registry->RegisterBooleanPref(kIPFSAutoRedirectGateway, false);
   registry->RegisterIntegerPref(kIPFSInfobarCount, 0);
+  registry->RegisterIntegerPref(kIpfsStorageMax, 1);
   registry->RegisterStringPref(kIPFSPublicGatewayAddress, kDefaultIPFSGateway);
   registry->RegisterFilePathPref(kIPFSBinaryPath, base::FilePath());
 }
@@ -144,6 +145,11 @@ void IpfsService::OnExecutableReady(const base::FilePath& path) {
   LaunchIfNotRunning(path);
 }
 
+std::string IpfsService::GetStorageSize() {
+  PrefService* prefs = user_prefs::UserPrefs::Get(context_);
+  return std::to_string(prefs->GetInteger(kIpfsStorageMax)) + "GB";
+}
+
 void IpfsService::LaunchIfNotRunning(const base::FilePath& executable_path) {
   if (ipfs_service_.is_bound())
     return;
@@ -161,7 +167,8 @@ void IpfsService::LaunchIfNotRunning(const base::FilePath& executable_path) {
 
   auto config = mojom::IpfsConfig::New(
       executable_path, GetConfigFilePath(), GetDataPath(),
-      GetGatewayPort(channel_), GetAPIPort(channel_), GetSwarmPort(channel_));
+      GetGatewayPort(channel_), GetAPIPort(channel_), GetSwarmPort(channel_),
+      GetStorageSize());
 
   ipfs_service_->Launch(
       std::move(config),

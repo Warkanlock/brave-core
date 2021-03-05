@@ -24,6 +24,10 @@
         display: flex;
         padding: 8px 1em;
       }
+
+      .storage-input {
+        display: flex;
+      }
 	</style>
 	  <div class="settings-box first">
       <div class="start">$i18n{resolveIPFSURLDesc}</div>
@@ -64,10 +68,26 @@
       sub-label="$i18n{ipfsCompanionEnabledDesc}"
       on-settings-boolean-control-change="onIPFSCompanionEnabledChange_">
     </settings-toggle-button>
+
+    <div class="settings-box">
+      <div class="flex cr-padded-text">
+        <div>$i18n{changeIpfsStorageMaxLabel}</div>
+        <div class="secondary">$i18n{changeIpfsStorageMaxDesc}</div>
+      </div>
+      <cr-input
+        id="ipfsStorageMax" type="number"
+        class="storage-input"
+        value="$i18n{ipfsStorageMaxValue}"
+        on-change=onChangeIpfsStorageMax_
+        min=1
+      >
+      </cr-input>
+    </div>
+
     <template is="dom-if" if="[[showChangeIPFSGatewayDialog_]]" restamp>
         <change-ipfs-gateway-dialog prefs="{{prefs}}" on-close="onChangeIPFSGatewayDialogClosed_">
         </change-ipfs-gateway-dialog>
     </template>
   </template>
   <script src="brave_ipfs_page.js"></script>
-</dom-module> 
+</dom-module>

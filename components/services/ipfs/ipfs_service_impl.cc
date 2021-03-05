@@ -186,7 +186,6 @@ void IpfsServiceImpl::Launch(mojom::IpfsConfigPtr config,
        "[\"/ip4/0.0.0.0/tcp/" + config->swarm_port + "\", \"/ip6/::/tcp/" +
            config->swarm_port + "\"]"},
       {"config", "Datastore.GCPeriod", "1h"},
-      {"config", "Datastore.StorageMax", "1GB"},
       {"config", "--json", "Swarm.ConnMgr.LowWater", "50"},
       {"config", "--json", "Swarm.ConnMgr.HighWater", "300"}};
 
@@ -195,6 +194,13 @@ void IpfsServiceImpl::Launch(mojom::IpfsConfigPtr config,
       std::move(callback).Run(false, -1);
       return;
     }
+  }
+
+  // Configure storage
+  if (!LaunchProcessAndExit(config->binary_path,
+      {"config", "Datastore.StorageMax", config->storage_max}, options)) {
+    std::move(callback).Run(false, -1);
+    return;
   }
 
 #if defined(OS_POSIX)

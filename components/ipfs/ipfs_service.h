@@ -140,6 +140,7 @@ class IpfsService : public KeyedService,
                            GarbageCollectionCallback callback,
                            std::unique_ptr<std::string> response_body);
 
+  std::string GetStorageSize();
   // The remote to the ipfs service running on an utility process. The browser
   // will not launch a new ipfs service process if this remote is already
   // bound.
